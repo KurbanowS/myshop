@@ -3,6 +3,7 @@ from shop import db, app, photos
 from .forms import CustomerRegisterForm
 import secrets, os
 
-@app.route('/customer/register')
+@app.route('/customer/register', methods=['GET', 'POST'])
 def customer_register():
-    return render_template('customer/register.html', title="Register")
+    form = CustomerRegisterForm()
+    return render_template('customer/register.html', title="Register", form=form)
