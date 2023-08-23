@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_uploads import IMAGES, UploadSet, configure_uploads, patch_request_class
 import os
+from flask_msearch import Search
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -18,6 +19,9 @@ patch_request_class(app)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+search = Search()
+search.init_app(app)
+
 
 app.app_context().push()
 
