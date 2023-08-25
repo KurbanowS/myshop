@@ -11,6 +11,7 @@
                         <th>Name</th>
                         <th>Image</th>
                         <th>Colors</th>
+                        <th>Stock</th>
                         <th>Quantity</th>
                         <th>Price</th>
                         <th>Discount</th>
@@ -37,6 +38,7 @@
                                             {% endfor %}
                                         </select>
                                     </td>
+                                    <td>{{ product.stock }}</td>
                                     <td><input type="number" name="quantity" value="{{ product.quantity }}" min="1" max="{{ product.stock }}" ></td>
                                     <td>{{ product.price }}$</td>
                                     {% if product.discount > 0 %}
@@ -55,7 +57,7 @@
                 </table>
                 <table class="table table-sm">
                     <tr>
-                        <td><a href="{{ url_for('index') }}" class="btn btn-sm btn-primary">Back</a></td>
+                        <td><a href="{{ url_for('get_order') }}" class="btn btn-success">Order now</a></td>
                         <td width="35%"></td>
                         <td colspan="3"><h4>Grand Total: {{ subtotal }}$</h4></td>
                         <td><a href="{{ url_for('clearcart') }}"  ><img src="{{ url_for('static',filename='img/delete.png') }}" height="30px" width="30px" alt="Delete all" style="position: absolute; left: 94%;"></a></td>

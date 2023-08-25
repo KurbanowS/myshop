@@ -55,7 +55,7 @@ def login():
             flash(f'Welcome {form.email.data}, You are logedin', 'success')
             return redirect(url_for('home'))
         else:
-            flash('Wrong password or username please try again', 'danger')
+            flash('Wrong password or email please try again', 'danger')
             return redirect(url_for('login'))
     return render_template('admin/login.html', form=form, title='Login page')
         

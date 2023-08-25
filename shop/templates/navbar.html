@@ -9,7 +9,7 @@
             <ul class="navbar-nav mr-auto">
         
             <li class="nav-item">
-                <a class="nav-link" href="/">All products</a>
+                <a class="nav-link" href="{{ url_for('index') }}">All products</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -33,11 +33,29 @@
                     {% endfor %}
                 </div>
             </li>
+            {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('customer_logout') }}">{{ current_user.username }}</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('customer_logout') }}">Logout</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('customer_register') }}">Register</a>
+                </li>
 
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('customerLogin') }}">Login</a>
+                </li>
+            {% endif %}
+            
 
             <li class="nav-item">
                 <a class="btn btn-sm bg-light text-dark" href="{{ url_for('GetCart') }}"><img src="{{ url_for('static', filename='img/shopping-bag.png') }}" alt="" height="30px" width="30px"> ({{ session['Shoppingcart']|length }})</a>
             </li>
+
             </ul>
             <form class="form-inline my-2 my-lg-0" action="{{ url_for('result') }}">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
