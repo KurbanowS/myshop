@@ -9,7 +9,7 @@
             <ul class="navbar-nav mr-auto">
         
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('index') }}">All products</a>
+                <a class="nav-link" href="{{ url_for('products.index') }}">All products</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -17,7 +17,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     {% for brand in barnds %}
-                        <a class="dropdown-item" href="{{ url_for('get_brand', id=brand.id) }}">{{ brand.name }}</a>
+                        <a class="dropdown-item" href="{{ url_for('products.get_brand', id=brand.id) }}">{{ brand.name }}</a>
                     {% endfor %}
                 </div>
             </li>
@@ -29,38 +29,48 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     {% for category in categories %}
-                        <a class="dropdown-item" href="{{ url_for('get_category', id=category.id) }}">{{ category.name }}</a>
+                        <a class="dropdown-item" href="{{ url_for('products.get_category', id=category.id) }}">{{ category.name }}</a>
                     {% endfor %}
                 </div>
             </li>
             {% if current_user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('customer_logout') }}">{{ current_user.username }}</a>
+                    <a class="nav-link" href="{{ url_for('customers.customer_logout') }}">{{ current_user.username }}</a>
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('customer_logout') }}">Logout</a>
+                    <a class="nav-link" href="{{ url_for('customers.customer_logout') }}">Logout</a>
                 </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('customer_register') }}">Register</a>
+                    <a class="nav-link" href="{{ url_for('customers.customer_register') }}">Register</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('customerLogin') }}">Login</a>
+                    <a class="nav-link" href="{{ url_for('customers.customerLogin') }}">Login</a>
                 </li>
             {% endif %}
             
 
             <li class="nav-item">
-                <a class="btn btn-sm bg-light text-dark" href="{{ url_for('GetCart') }}"><img src="{{ url_for('static', filename='img/shopping-bag.png') }}" alt="" height="30px" width="30px"> ({{ session['Shoppingcart']|length }})</a>
+                <a class="btn btn-sm bg-light text-dark" href="{{ url_for('carts.GetCart') }}"><img src="{{ url_for('static', filename='img/shopping-bag.png') }}" alt="" height="30px" width="30px"> ({{ session['Shoppingcart']|length }})</a>
             </li>
 
             </ul>
-            <form class="form-inline my-2 my-lg-0" action="{{ url_for('result') }}">
+            <form class="form-inline my-2 my-lg-0" action="{{ url_for('products.result') }}">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
+
+            {% if CURRENT_LANGUAGE == 'ru' %}
+                <a class="nav-link" href="{{ url_for('customers.set_language', language='en') }}">
+                    <img src="{{ url_for('static', filename='img/united-kingdom.png') }}" alt="" width="25px" height="20px">
+                </a>
+            {% else %}
+                <a class="nav-link" href="{{ url_for('customers.set_language', language='ru') }}">
+                    <img src="{{ url_for('static', filename='img/russia.png') }}" alt="" width="25px" height="20px">
+                </a>
+            {% endif %}
         </div>
     </nav>
 </div>    

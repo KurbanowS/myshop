@@ -1,5 +1,5 @@
 from flask import render_template, redirect, request, url_for, flash, session, current_app
-from shop import db, app
+from shop.carts import bp
 from shop.products.models import Addproduct
 from shop.products.routes import barnds, categories
 
@@ -11,7 +11,7 @@ def MagerDicts(dict1,dict2):
         return dict(list(dict1.items()) + list(dict2.items()))
 
 
-@app.route('/addcart', methods=['POST'])
+@bp.route('/addcart', methods=['POST'])
 def AddCart():
     try:
         product_id = request.form.get('product_id')
@@ -42,10 +42,10 @@ def AddCart():
 
 
 
-@app.route('/carts')
+@bp.route('/carts')
 def GetCart():
     if 'Shoppingcart' not in session or len(session['Shoppingcart']) <= 0:
-        return redirect(url_for('index'))
+        return redirect(url_for('products.index'))
     subtotal = 0
     for key , product in session['Shoppingcart'].items():
         discount = (product['discount'] / 100) * float(product['price'])
@@ -55,10 +55,10 @@ def GetCart():
     return render_template('products/carts.html',title="Cart", subtotal=subtotal, categories=categories(), barnds=barnds())
 
 
-@app.route('/updatecart/<int:code>', methods=['POST'])
+@bp.route('/updatecart/<int:code>', methods=['POST'])
 def updatecart(code):
     if 'Shoppingcart' not in session or len(session['Shoppingcart']) <= 0:
-        return redirect(url_for('index'))
+        return redirect(url_for('products.index'))
     if request.method ==  "POST":
         quantity = request.form.get('quantity')
         color = request.form.get('color')
@@ -69,32 +69,32 @@ def updatecart(code):
                     item['quantity'] = quantity
                     item['color'] = color 
                     flash('Item is updated!','success')
-                    return redirect(url_for('GetCart'))
+                    return redirect(url_for('carts.GetCart'))
         except Exception as e:
             print(e)
-            return redirect(url_for('GetCart'))
+            return redirect(url_for('carts.GetCart'))
         
 
-@app.route('/deletecart/<int:id>')
+@bp.route('/deletecart/<int:id>')
 def deletecart(id):
     if 'Shoppingcart' not in session or len(session['Shoppingcart']) <= 0:
-        return redirect(url_for('index'))
+        return redirect(url_for('products.index'))
     try:
         session.modified = True
         for key, item in session['Shoppingcart'].items():
             if int(key) == id:
                 session['Shoppingcart'].pop(key, None)
-                return redirect(url_for('GetCart'))
+                return redirect(url_for('carts.GetCart'))
     except Exception as e:
         print(e)
-        return redirect(url_for('GetCart'))
+        return redirect(url_for('carts.GetCart'))
 
 
-@app.route('/clearcart')
+@bp.route('/clearcart')
 def clearcart():
     try:
         session.pop('Shoppingcart', None)
-        return redirect(url_for('index'))
+        return redirect(url_for('products.index'))
     except Exception as e:
         print(e)
 

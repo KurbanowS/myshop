@@ -1,44 +1,14 @@
 {% extends "layout.html" %}
 {% block content %}
     {% include "_messages.html" %}
-    <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="{{ url_for('home') }}">Admin</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{{ url_for('home') }}">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('brands') }}">Brands</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('categories') }}">Categories</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Dropdown link
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="{{ url_for('addproduct') }}">Addproduct</a>
-                            <a class="dropdown-item" href="{{ url_for('addcat') }}">Addcategory</a>
-                            <a class="dropdown-item" href="{{ url_for('addbrand') }}">Addbrand</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </div>
+    {% include "admin/adminnavbar.html" %}
     <div class="container mt-5 table-hover">
         <table class="table table-sm table-condensed table-striped">
             <thead>
-                <th>Sr</th>
-                <th>Name</th>
-                <th>Edit</th>
-                <th>Delete</th>
+                <th>{{_("Sr")}}</th>
+                <th>{{_("Name")}}</th>
+                <th>{{_("Edit")}}</th>
+                <th>{{_("Delete")}}</th>
             </thead>
 
             <tbody>
@@ -47,9 +17,9 @@
                     <tr>
                         <td>{{ loop.index }}</td>
                         <td>{{ brand.name }}</td>
-                        <td><a href="{{ url_for('updatebrand', id=brand.id) }}" class="btn btn-sm btn-outline-success">Edit</a></td>
+                        <td><a href="{{ url_for('products.updatebrand', id=brand.id) }}" class="btn btn-sm btn-outline-success">{{_("Edit")}}</a></td>
                         <td>
-                            <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#exampleModal-{{ brand.id }}">Delete</button>
+                            <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#exampleModal-{{ brand.id }}">{{_("Delete")}}</button>
                         </td>
                     </tr>
                            
@@ -63,12 +33,12 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <span class="text-danger">Are you sure that you want to delete ( {{ brand.name }} ) Brand?</span>
+                            <span class="text-danger">{{_("Are you sure that you want to delete")}} ( {{ brand.name }} ) {{_("Brand?")}}</span>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
-                            <form action="{{ url_for('deletebrand', id=brand.id) }}" method="post">
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{{_("Cancel")}}</button>
+                            <form action="{{ url_for('products.deletebrand', id=brand.id) }}" method="post">
+                                <button type="submit" class="btn btn-danger btn-sm">{{_("Delete")}}</button>
                             </form>
                         </div>
                         </div>
@@ -81,7 +51,7 @@
                     <tr>
                         <td>{{ loop.index }}</td>
                         <td>{{ category.name }}</td>
-                        <td><a href="{{ url_for('updatecategory', id=category.id) }}" class="btn btn-sm btn-outline-success">Edit</a></td>
+                        <td><a href="{{ url_for('products.updatecategory', id=category.id) }}" class="btn btn-sm btn-outline-success">Edit</a></td>
                         <td>
                             <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#exampleModal-{{ category.id }}">Delete</button>
                         </td>
@@ -101,7 +71,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
-                            <form action="{{ url_for('deletecategory', id=category.id) }}" method="post">
+                            <form action="{{ url_for('products.deletecategory', id=category.id) }}" method="post">
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                             </form>
                         </div>

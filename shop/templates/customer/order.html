@@ -5,41 +5,36 @@
         {% include "_messages.html" %}
         <div class="row">
             <div class="col-md-12">
+                Invoice: {{ orders.invoice }}
+                <br>
+                Status: {{ orders.status }}
+                <br>
+                Customer name: {{ customer.name }}
+                <br>
+                Customer email: {{ customer.email }}
+                <br>
+                Customer contact: {{ customer.contact }}
                 <table class="table table-sm" style="margin-bottom: 0px;">
                     <thead>
                         <th>Sr</th>
                         <th>Name</th>
-                        <th>Image</th>
                         <th>Colors</th>
-                        <th>Stock</th>
                         <th>Quantity</th>
                         <th>Price</th>
                         <th>Discount</th>
                         <th>Subtotal</th>
-                        <th>Update</th>
-                        <th>Delete</th>
                     </thead>
                     <tbody>
-                        {% for key , product in session['Shoppingcart'].items() %}
+                        {% for key , product in orders.orders.items() %}
                         {% set discount = "%0.2f"|format((product.discount / 100) * product.price|float)  %}
                             <tr>
                                 <td>{{ loop.index }}</td>
-                                <td><img src="{{ url_for('static', filename='images/' + product.image) }}" alt="product.name" width="50px" height="45px"></td>
                                 <td>{{ product.name }}</td>
                                 <form action="{{ url_for('carts.updatecart', code=key) }}" method="post">
                                     <td>
-                                        {% set colors = product.colors.split(',') %}
-                                        <label for="colors">Colors: </label>
-                                        <select name="color" id="color">
-                                            <option value="{{ product.color }}" style="display: none;">{{ product.color|capitalize }}</option>
-                                            {% for color in colors %}
-                                                {% set col = color.split(':') %}
-                                            <option value="{{col[0]}}">{{col[0]|capitalize }}</option>
-                                            {% endfor %}
-                                        </select>
+                                        {{ product.color|capitalize }}
                                     </td>
-                                    <td>{{ product.stock }}</td>
-                                    <td><input type="number" name="quantity" value="{{ product.quantity }}" min="1" max="{{ product.stock }}" ></td>
+                                    <td>{{ product.quantity }}</td>
                                     <td>{{ product.price }}$</td>
                                     {% if product.discount > 0 %}
                                         <td>{{ product.discount }}% &nbsp; is {{discount}}$</td>
@@ -48,19 +43,36 @@
                                     {% endif %}
                                     {% set subtotal = product.quantity|int * (product.price|float - product.price|float / 100 * product.discount|int) %}
                                     <td>{{ subtotal }}$</td>
-                                    <td><button type="submit" class="btn btn-sm btn-outline-success">Update</button></td>
                                 </form>
-                                <td><a href="{{ url_for('carts.deletecart', id=key) }}" class="btn btn-sm btn-danger">Remove</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
                 <table class="table table-sm">
                     <tr>
-                        <td><a href="{{ url_for('customers.get_order') }}" class="btn btn-success">Order now</a></td>
+                        <td>
+                            <form action="{{ url_for('customers.payment') }}" method="POST">
+                                {% set amount = grandTotal.replace('.','') %}
+                                <input type="hidden" name="amount" value="{{ amount }}">
+                                <input type="hidden" name="invoice" value="{{ orders.invoice }}">
+                                <script
+                                    src="https://checkout.stripe.com/checkout.js"
+                                    class="stripe-button"
+                                    data-key="pk_test_51KafOcIqqq3Njx21tbV3TU2sfxaRxLYokHbyj9r2diALpF9JQISmyLIgbHPkTcH6TH8tZeoHlgoqMHmKICtvzVye00bup1vMp4"
+                                    data-name="Myshop"
+                                    data-description="myshop"
+                                    data-amount="{{amount}}"
+                                    data-currency="usd">
+                                </script>
+                            </form>
+                        </td>
                         <td width="35%"></td>
-                        <td colspan="3"><h4>Grand Total: {{ subtotal }}$</h4></td>
-                        <td><a href="{{ url_for('carts.clearcart') }}"  ><img src="{{ url_for('static',filename='img/delete.png') }}" height="30px" width="30px" alt="Delete all" style="position: absolute; left: 94%;"></a></td>
+                        <td colspan="3"><h4>Grand Total: {{ grandTotal }}$</h4></td>
+                        <td>
+                        <form action="{{ url_for('customers.get_pdf',invoice=orders.invoice) }}" method="post">
+                            <button type="submit" class="btn btn-primary">Get pdf</button>
+                        </form>
+                        </td>
                     </tr>
                 </table>
             </div>

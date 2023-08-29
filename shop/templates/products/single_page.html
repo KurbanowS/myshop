@@ -27,7 +27,7 @@
                 <b>About product:</b>
                 <p>{{ product.description }}</p>
                 <hr>
-                <form action="{{url_for('AddCart')}}" method="post">
+                <form action="{{url_for('carts.AddCart')}}" method="post">
                 <input type="hidden" name="product_id" value="{{product.id}}">
                 <button type="submit" class="btn btn-sm btn-warning">Add to Cart</button>
                 <label for="quantity">Quantity: </label>

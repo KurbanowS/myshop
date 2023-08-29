@@ -10,14 +10,14 @@
                 <form action="" method="post">
                     <input type="text" name="brand" class="form-control">
                     <input type="submit" value="Add brand" class="btn btn-info mt-2">
-                    <a href="{{ url_for('home') }}" class="btn btn-outline-primary mt-2" style="margin-left: 10px;">Back</a>
+                    <a href="{{ url_for('ADMIN.home') }}" class="btn btn-outline-primary mt-2" style="margin-left: 10px;">Back</a>
                 </form>
             {% else %}
                 <h1 class="text-center mt-5">Add a category</h1>
                 <form action="" method="post">
                     <input type="text" name="category" class="form-control">
                     <input type="submit" value="Add category" class="btn btn-info mt-2">
-                    <a href="{{ url_for('home') }}" class="btn btn-outline-primary mt-2" style="margin-left: 10px;">Back</a>
+                    <a href="{{ url_for('ADMIN.home') }}" class="btn btn-outline-primary mt-2" style="margin-left: 10px;">Back</a>
                 </form>
             {% endif %}
             </div>

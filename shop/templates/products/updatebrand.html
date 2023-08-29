@@ -12,14 +12,14 @@
                     <input type="text" name="brand" class="form-control" value="{{ updatebrand.name }}">
                     <input type="submit" value="Update brand" class="btn btn-info mt-2">
                 </form>
-                <a href="{{ url_for('brands') }}" class="btn btn-warning" style="color: white; margin-top: -66px; margin-left: 140px;">Cancel</a>
+                <a href="{{ url_for('ADMIN.brands') }}" class="btn btn-warning" style="color: white; margin-top: -66px; margin-left: 140px;">Cancel</a>
             {% else %}
                 <h1 class="text-center mt-5">Update a category</h1>
                 <form action="" method="post">
                     <input type="text" name="category" class="form-control" value="{{ updatecategory.name }}">
                     <input type="submit" value="Update category" class="btn btn-info mt-2">
                 </form>
-                <a href="{{ url_for('categories') }}" class="btn btn-warning" style="color: white; margin-top: -66px; margin-left: 160px;">Cancel</a>
+                <a href="{{ url_for('ADMIN.categories') }}" class="btn btn-warning" style="color: white; margin-top: -66px; margin-left: 160px;">Cancel</a>
             {% endif %}
             </div>
         </div>

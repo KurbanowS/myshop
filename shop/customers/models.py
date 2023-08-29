@@ -52,5 +52,3 @@ class CustomerOrder(db.Model):
     def __repr__(self):
         return '<CustomerOrder %r>' % self.invoice
 
-
-db.create_all()

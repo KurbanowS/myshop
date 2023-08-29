@@ -1,39 +1,68 @@
-from flask import Flask
+from flask import Flask, request, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_uploads import IMAGES, UploadSet, configure_uploads, patch_request_class
 import os
 from flask_msearch import Search
 from flask_login import LoginManager
+from flask_babel import Babel, lazy_gettext as _l
+from config import Config
 
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///myshop.db"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config["SECRET_KEY"] = 'asfjashfjsbj121'
-app.config["UPLOADED_PHOTOS_DEST"] = os.path.join(basedir, 'static/images')
-photos = UploadSet('photos', IMAGES)
-configure_uploads(app, photos)
-patch_request_class(app)
-
-
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
+db = SQLAlchemy()
+migrate = Migrate()
 search = Search()
-search.init_app(app)
+babel = Babel()
+
+
 login_manager = LoginManager()
-login_manager.init_app(app)
 login_manager.login_view='customerLogin'
 login_manager.needs_refresh_message_category = 'danger'
-login_manager.login_message = u"Please login First"
+login_manager.login_message = _l("Please login First")
+photos = UploadSet('photos', IMAGES)
 
 
-app.app_context().push()
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+    login_manager.init_app(app)
+    db.init_app(app)
+    search.init_app(app)
+    babel.init_app(app)
+    migrate.init_app(app, db)
+    configure_uploads(app, photos)
+    patch_request_class(app)
+
+    from shop.admin import bp as admin_bp
+    app.register_blueprint(admin_bp)
+
+    from shop.products import bp as products_bp
+    app.register_blueprint(products_bp)
+
+    from shop.carts import bp as carts_bp
+    app.register_blueprint(carts_bp)
+
+    from shop.customers import bp as customers_bp
+    app.register_blueprint(customers_bp)
+
+    from shop.errors import bp as errors_bp
+    app.register_blueprint(errors_bp)
+
+    @app.context_processor
+    def inject_conf_var():
+        return dict(
+            AVAILABLE_LANGUAGE=app.config['LANGUAGES'],
+            CURRENT_LANGUAGE=session.get('language','en')
+        )
+    return app
 
 
-from shop.admin import routes
-from shop.products import routes
-from shop.carts import carts
-from shop.customers import routes
+@babel.localeselector
+def get_locale():
+    try:
+        language = session['language']
+    except KeyError:
+        language = None
+    if language:
+        return language
+    return 'ru'
